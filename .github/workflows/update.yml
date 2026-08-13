@@ -28,7 +28,11 @@ jobs:
             echo "Formula is already current."
             exit 0
           fi
-          version="$(grep -E '^  version "[^"]+"$' Formula/jiro.rb | cut -d '"' -f 2)"
+          version="$(sed -nE 's#.*releases/download/v([0-9]+\.[0-9]+\.[0-9]+)/.*#\1#p' Formula/jiro.rb | head -n 1)"
+          if [[ -z "$version" ]]; then
+            echo "Could not determine jiro version from Formula URL." >&2
+            exit 1
+          fi
           git config user.name "goreleaserbot"
           git config user.email "bot@goreleaser.com"
           git add Formula/jiro.rb

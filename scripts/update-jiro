@@ -33,7 +33,6 @@ if [[ "$(jq -er '.draft or .prerelease' <<<"$release_json")" != "false" ]]; then
   exit 1
 fi
 
-version="${tag#v}"
 checksum_name="jiro_${tag}_checksums.txt"
 checksum_url="$(jq -er --arg name "$checksum_name" '.assets[] | select(.name == $name) | .browser_download_url' <<<"$release_json")"
 checksums="$(curl --fail --silent --show-error --location "$checksum_url")"
@@ -70,7 +69,6 @@ cat >"$formula_path" <<EOF
 class Jiro < Formula
   desc "Jira CLI for humans, scripts, and AI agents"
   homepage "https://github.com/timonwong/jiro"
-  version "$version"
   license "MIT"
 
   on_macos do

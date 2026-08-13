@@ -1,7 +1,6 @@
 class Jiro < Formula
   desc "Jira CLI for humans, scripts, and AI agents"
   homepage "https://github.com/timonwong/jiro"
-  version "0.7.0"
   license "MIT"
 
   on_macos do
