@@ -12,14 +12,16 @@ permissions:
 jobs:
   formula:
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-24.04, macos-15]
+        formula: [jiro, skimi]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: Homebrew/actions/setup-homebrew@962acc985cf741e4f7a112a3cfa6194386b63edf
       - name: Audit formula
-        run: brew audit --strict --online timonwong/tap/jiro
+        run: brew audit --strict --online timonwong/tap/${{ matrix.formula }}
       - name: Install and test formula
         run: |
-          brew install timonwong/tap/jiro
-          brew test timonwong/tap/jiro
+          brew install timonwong/tap/${{ matrix.formula }}
+          brew test timonwong/tap/${{ matrix.formula }}

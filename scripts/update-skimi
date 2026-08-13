@@ -1,0 +1,105 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+repo="timonwong/skimi"
+requested_tag="${1:-}"
+formula_path="${FORMULA_PATH:-Formula/skimi.rb}"
+
+if [[ -n "$requested_tag" ]] && [[ ! "$requested_tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "Expected a stable SemVer tag such as v1.2.3, got: $requested_tag" >&2
+  exit 1
+fi
+
+api_headers=(-H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28")
+if [[ -n "${GITHUB_TOKEN:-}" ]]; then
+  api_headers+=(-H "Authorization: Bearer $GITHUB_TOKEN")
+fi
+
+if [[ -n "$requested_tag" ]]; then
+  release_url="https://api.github.com/repos/$repo/releases/tags/$requested_tag"
+else
+  release_url="https://api.github.com/repos/$repo/releases/latest"
+fi
+
+release_json="$(curl --fail --silent --show-error --location "${api_headers[@]}" "$release_url")"
+tag="$(jq -er '.tag_name' <<<"$release_json")"
+
+if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+  echo "Latest release is not a stable SemVer tag: $tag" >&2
+  exit 1
+fi
+if [[ "$(jq -er '.draft or .prerelease' <<<"$release_json")" != "false" ]]; then
+  echo "Refusing to publish draft or prerelease tag: $tag" >&2
+  exit 1
+fi
+
+version="${tag#v}"
+checksum_name="checksums.txt"
+checksum_url="$(jq -er --arg name "$checksum_name" '.assets[] | select(.name == $name) | .browser_download_url' <<<"$release_json")"
+checksums="$(curl --fail --silent --show-error --location "$checksum_url")"
+
+asset_name() {
+  local os="$1"
+  local arch="$2"
+  printf 'skimi_%s_%s_%s.tar.gz' "$version" "$os" "$arch"
+}
+
+asset_url() {
+  local name="$1"
+  jq -er --arg name "$name" '.assets[] | select(.name == $name) | .browser_download_url' <<<"$release_json"
+}
+
+asset_sha() {
+  local name="$1"
+  local sha
+  sha="$(awk -v name="$name" '$2 == name { print $1 }' <<<"$checksums")"
+  if [[ ! "$sha" =~ ^[0-9a-f]{64}$ ]]; then
+    echo "Missing or invalid SHA-256 for release asset: $name" >&2
+    exit 1
+  fi
+  printf '%s' "$sha"
+}
+
+darwin_arm64="$(asset_name darwin arm64)"
+darwin_amd64="$(asset_name darwin amd64)"
+linux_arm64="$(asset_name linux arm64)"
+linux_amd64="$(asset_name linux amd64)"
+
+mkdir -p "$(dirname "$formula_path")"
+cat >"$formula_path" <<EOF
+class Skimi < Formula
+  desc "Skill manager for AI agents"
+  homepage "https://github.com/timonwong/skimi"
+  license "MIT"
+
+  on_macos do
+    if Hardware::CPU.arm?
+      url "$(asset_url "$darwin_arm64")"
+      sha256 "$(asset_sha "$darwin_arm64")"
+    else
+      url "$(asset_url "$darwin_amd64")"
+      sha256 "$(asset_sha "$darwin_amd64")"
+    end
+  end
+
+  on_linux do
+    if Hardware::CPU.arm?
+      url "$(asset_url "$linux_arm64")"
+      sha256 "$(asset_sha "$linux_arm64")"
+    else
+      url "$(asset_url "$linux_amd64")"
+      sha256 "$(asset_sha "$linux_amd64")"
+    end
+  end
+
+  def install
+    bin.install "skimi"
+  end
+
+  test do
+    assert_match "skimi manages AI agent skills", shell_output("#{bin}/skimi --help")
+  end
+end
+EOF
+
+echo "Updated $formula_path to $tag"

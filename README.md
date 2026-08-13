@@ -1,7 +1,8 @@
 # Homebrew tap
 
 Homebrew formulae for projects maintained by [Timon Wong](https://github.com/timonwong).
-The tap currently contains only [jiro](https://github.com/timonwong/jiro).
+The tap contains [jiro](https://github.com/timonwong/jiro) and
+[skimi](https://github.com/timonwong/skimi).
 
 ## Install jiro
 
@@ -9,7 +10,13 @@ The tap currently contains only [jiro](https://github.com/timonwong/jiro).
 brew install timonwong/tap/jiro
 ```
 
-The `jiro` release workflow updates the formula immediately after GoReleaser OSS
-publishes a release, using a write deploy key scoped only to this repository. A
-scheduled workflow also reconciles it with the latest stable GitHub Release every
-six hours.
+## Install skimi
+
+```sh
+brew install timonwong/tap/skimi
+```
+
+Each project's release workflow updates its formula immediately after GoReleaser
+OSS publishes a release, using a dedicated write deploy key scoped only to this
+repository. A scheduled workflow also reconciles each formula with its latest
+stable GitHub Release every six hours.
