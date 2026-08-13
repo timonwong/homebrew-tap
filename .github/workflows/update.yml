@@ -22,19 +22,10 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./scripts/update-jiro
       - name: Commit update
-        shell: bash
-        run: |
-          if git diff --quiet -- Formula/jiro.rb; then
-            echo "Formula is already current."
-            exit 0
-          fi
-          version="$(sed -nE 's#.*releases/download/v([0-9]+\.[0-9]+\.[0-9]+)/.*#\1#p' Formula/jiro.rb | head -n 1)"
-          if [[ -z "$version" ]]; then
-            echo "Could not determine jiro version from Formula URL." >&2
-            exit 1
-          fi
-          git config user.name "goreleaserbot"
-          git config user.email "bot@goreleaser.com"
-          git add Formula/jiro.rb
-          git commit -m "jiro ${version}"
-          git push
+        uses: stefanzweifel/git-auto-commit-action@4a55954c782fc1ea30b9056cd3e7a2b40ca8887d # v7.2.0
+        with:
+          file_pattern: Formula/jiro.rb
+          commit_message: Update jiro Formula
+          commit_user_name: goreleaserbot
+          commit_user_email: bot@goreleaser.com
+          commit_author: goreleaserbot <bot@goreleaser.com>
