@@ -1,0 +1,36 @@
+name: Update formulae
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-formulae
+  cancel-in-progress: false
+
+jobs:
+  jiro:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.2.2
+      - name: Reconcile with the latest stable release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./scripts/update-jiro
+      - name: Commit update
+        shell: bash
+        run: |
+          if git diff --quiet -- Formula/jiro.rb; then
+            echo "Formula is already current."
+            exit 0
+          fi
+          version="$(grep -E '^  version "[^"]+"$' Formula/jiro.rb | cut -d '"' -f 2)"
+          git config user.name "goreleaserbot"
+          git config user.email "bot@goreleaser.com"
+          git add Formula/jiro.rb
+          git commit -m "jiro ${version}"
+          git push
