@@ -28,6 +28,6 @@ class Skimi < Formula
   end
 
   test do
-    assert_match "A skill manager for AI agents", shell_output("#{bin}/skimi --help")
+    assert_match "skimi manages AI agent skills", shell_output("#{bin}/skimi --help")
   end
 end
