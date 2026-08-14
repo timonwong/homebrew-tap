@@ -5,21 +5,21 @@ class Skimi < Formula
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/timonwong/skimi/releases/download/v0.3.0/skimi_0.3.0_darwin_arm64.tar.gz"
-      sha256 "65e521a1e7e23c4bec89a864bab30389aa29e2430ce0086277e3d198ffb18727"
+      url "https://github.com/timonwong/skimi/releases/download/v0.3.1/skimi_0.3.1_darwin_arm64.tar.gz"
+      sha256 "66e0b992073be8fc5bffe144e2fa3b0bcd5ac98bad727a30f6c51857660c8e87"
     else
-      url "https://github.com/timonwong/skimi/releases/download/v0.3.0/skimi_0.3.0_darwin_amd64.tar.gz"
-      sha256 "51a05a37f733a99617a598d67b606268626ea48d9cdb20824a12aab8ebd13067"
+      url "https://github.com/timonwong/skimi/releases/download/v0.3.1/skimi_0.3.1_darwin_amd64.tar.gz"
+      sha256 "39cd7dfe1a94204b92a9cea4d526ade6b9801d78880a54fdbf172125403df736"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/timonwong/skimi/releases/download/v0.3.0/skimi_0.3.0_linux_arm64.tar.gz"
-      sha256 "de47e83b266b56c9bffd371f538fd6a70cdd9d0834a804ba52cb23f5b983066d"
+      url "https://github.com/timonwong/skimi/releases/download/v0.3.1/skimi_0.3.1_linux_arm64.tar.gz"
+      sha256 "ced5eabd88c49706b82421e6a4097dab59715e4d4210ac36a2e423c23073cd69"
     else
-      url "https://github.com/timonwong/skimi/releases/download/v0.3.0/skimi_0.3.0_linux_amd64.tar.gz"
-      sha256 "eaccce264d6b563e6ad6204cd54d1b0f596a834e35de3dbc47282b00d6c7f4bb"
+      url "https://github.com/timonwong/skimi/releases/download/v0.3.1/skimi_0.3.1_linux_amd64.tar.gz"
+      sha256 "ccfebdadfd58001cf14deceb6a70502355cb569364a0682ae1e46edf9919e449"
     end
   end
 
