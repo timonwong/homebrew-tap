@@ -5,21 +5,21 @@ class Jiro < Formula
 
   on_macos do
     if Hardware::CPU.arm?
-      url "https://github.com/timonwong/jiro/releases/download/v0.8.1/jiro_v0.8.1_darwin_arm64"
-      sha256 "e7d2c403ab554d95d966c38959ad7f9ad6ab2f961a6e761d1d29ee893e6b8141"
+      url "https://github.com/timonwong/jiro/releases/download/v0.9.0/jiro_v0.9.0_darwin_arm64"
+      sha256 "eb8c20314af4818c9bb0f8cd5d8c9d2ea7e79db36d46af41f0f2ddc72cf3cf53"
     else
-      url "https://github.com/timonwong/jiro/releases/download/v0.8.1/jiro_v0.8.1_darwin_amd64"
-      sha256 "816b6d9ab7181df80f3e0b97bb9dfd6673b15a5d3e58b228441d0139bac2cc66"
+      url "https://github.com/timonwong/jiro/releases/download/v0.9.0/jiro_v0.9.0_darwin_amd64"
+      sha256 "dea0ea7e494f730d5530cc276921ae3d1398a5d23ea52b52e61c4977399d9fb0"
     end
   end
 
   on_linux do
     if Hardware::CPU.arm?
-      url "https://github.com/timonwong/jiro/releases/download/v0.8.1/jiro_v0.8.1_linux_arm64"
-      sha256 "4f210b9d50d9a64de2cc588dcd5f1469bf0e39380226b0c44f3083cc118df7f4"
+      url "https://github.com/timonwong/jiro/releases/download/v0.9.0/jiro_v0.9.0_linux_arm64"
+      sha256 "506b454c562ef1d54dbd79ab6ff31976fafcf2e6912e81223a0cdbc39669abba"
     else
-      url "https://github.com/timonwong/jiro/releases/download/v0.8.1/jiro_v0.8.1_linux_amd64"
-      sha256 "908fac111e6ad53a0f36b38428dd66ad2b4932e13db87d3b7d3216a4609c57d2"
+      url "https://github.com/timonwong/jiro/releases/download/v0.9.0/jiro_v0.9.0_linux_amd64"
+      sha256 "8397902af8abb8b4a3aa1b1c29cb7d83a501f86227d19210f6a4bdb9e5d9ff58"
     end
   end
 
